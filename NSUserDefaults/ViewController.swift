@@ -22,7 +22,15 @@ class ViewController: UIViewController {
     
     let userDefaults = UserDefaults.standard
     
-    var users: [String] = [String]()
+    var currentPlayer: String = String()
+    
+    var alreadyAddedUsers: [String] = [String]()
+    
+    var currentPlayerScore: Int = Int()
+    
+    var highestScore: Int = Int()
+    
+    var playerNameWithHighestScore: String = String()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,19 +43,44 @@ class ViewController: UIViewController {
     }
 
     @IBAction func addPlayerAction(_ sender: UIButton) {
-        let currentPlayer: String = userName.text!
-        playerLabel.text = currentPlayer
-        users.append(currentPlayer)
+        currentPlayer = userName.text!
+        userName.text = String()
+        userName.resignFirstResponder()
         
-        userDefaults.set(users, forKey: "usernames")
+        resetScore()
+        
+        playerLabel.text = currentPlayer
+        alreadyAddedUsers.append(currentPlayer)
+        
+        userDefaults.set(alreadyAddedUsers, forKey: "already_added_users")
     }
 
     @IBAction func addToScoreAction(_ sender: UIButton) {
+        currentPlayerScore = currentPlayerScore + 10
+        scoreLabel.text = String(currentPlayerScore)
         
+        if currentPlayerScore > highestScore {
+            highestScore = currentPlayerScore
+            playerNameWithHighestScore = currentPlayer
+            
+            hightScore.text = String(highestScore)
+            leaderName.text = playerNameWithHighestScore
+            
+            userDefaults.set(highestScore, forKey: "highest_score")
+            userDefaults.set(currentPlayer, forKey: "leader_name")
+        }
+    }
+    
+    func resetScore() {
+        scoreLabel.text = String()
+        currentPlayerScore = Int()
     }
     
     @IBAction func resetScoreAndPlayerAction(_ sender: UIButton) {
+        playerLabel.text = String()
+        currentPlayer = String()
         
+        resetScore()
     }
 
 }
