@@ -24,8 +24,6 @@ class ViewController: UIViewController {
     
     var currentPlayer: String = String()
     
-    var alreadyAddedUsers: [String] = [String]()
-    
     var currentPlayerScore: Int = Int()
     
     var highestScore: Int = Int()
@@ -34,7 +32,14 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+
+        if (userDefaults.value(forKey: "highest_score") != nil) && (userDefaults.value(forKey: "leader_name") != nil) {
+            highestScore = userDefaults.value(forKey: "highest_score") as! Int
+            hightScore.text = String(highestScore)
+
+            playerNameWithHighestScore = userDefaults.value(forKey: "leader_name") as! String
+            leaderName.text = playerNameWithHighestScore
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -50,24 +55,23 @@ class ViewController: UIViewController {
         resetScore()
         
         playerLabel.text = currentPlayer
-        alreadyAddedUsers.append(currentPlayer)
-        
-        userDefaults.set(alreadyAddedUsers, forKey: "already_added_users")
     }
 
     @IBAction func addToScoreAction(_ sender: UIButton) {
-        currentPlayerScore = currentPlayerScore + 10
-        scoreLabel.text = String(currentPlayerScore)
-        
-        if currentPlayerScore > highestScore {
-            highestScore = currentPlayerScore
-            playerNameWithHighestScore = currentPlayer
-            
-            hightScore.text = String(highestScore)
-            leaderName.text = playerNameWithHighestScore
-            
-            userDefaults.set(highestScore, forKey: "highest_score")
-            userDefaults.set(currentPlayer, forKey: "leader_name")
+        if (currentPlayer.isEmpty){
+            currentPlayerScore = currentPlayerScore + 10
+            scoreLabel.text = String(currentPlayerScore)
+
+            if currentPlayerScore > highestScore {
+                highestScore = currentPlayerScore
+                playerNameWithHighestScore = currentPlayer
+
+                hightScore.text = String(highestScore)
+                leaderName.text = playerNameWithHighestScore
+
+                userDefaults.set(highestScore, forKey: "highest_score")
+                userDefaults.set(currentPlayer, forKey: "leader_name")
+            }
         }
     }
     
